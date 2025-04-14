@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modal İçinde Icon Picker Kullanımı</title>
+    
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome 5 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    
+    <!-- Icon Picker CSS -->
+    <link href="css/iconpicker.css" rel="stylesheet">
+    
+    <style>
+        body {
+            padding: 2rem;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 960px;
+        }
+        
+        .preview-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h3>Modal İçinde Icon Picker Kullanımı</h3>
+            </div>
+            <div class="card-body">
+                <p class="lead">Bu örnek, IconPicker'ı bir Bootstrap modal içinde nasıl kullanacağınızı gösterir.</p>
+                
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#iconModal">
+                    <i class="fas fa-icons me-2"></i> İkon Seçiciyi Aç
+                </button>
+                
+                <hr>
+                
+                <div class="mt-4">
+                    <h5>Seçilen İkon:</h5>
+                    <div class="d-flex align-items-center mt-3">
+                        <i id="selected-icon-preview" class="preview-icon fas fa-heart"></i>
+                        <code id="selected-icon-class">fas fa-heart</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="iconModal" tabindex="-1" aria-labelledby="iconModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="iconModalLabel">İkon Seçin</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">
+                            <i id="modal-icon-preview" class="fas fa-heart"></i>
+                        </span>
+                        <input type="text" class="form-control" id="modal-icon-input" value="fas fa-heart" placeholder="İkon seçmek için tıklayın">
+                        <button class="btn btn-outline-secondary" type="button" id="modal-icon-button">İkon Seç</button>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Önemli:</strong> Modal içinde kullanımken <code>modalMode: true</code> seçeneğini kullanmayı unutmayın.
+                    </div>
+                    
+                    <pre><code>$('#modal-icon-input').iconpicker({
+    title: 'Modal İçinde İkon Seçin',
+    selectedIcon: 'fas fa-heart',
+    iconPreview: '#modal-icon-preview',
+    iconButton: '#modal-icon-button',
+    modalMode: true,  // Modal içinde kullanım
+    zIndex: 2000      // Modal'dan çok daha yüksek z-index
+});</code></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary" id="select-icon-btn">Seç</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Font Awesome Iconset JS -->
+    <script src="js/iconset/iconset-fontawesome-5-all.js"></script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Icon Picker JS -->
+    <script src="js/iconpicker.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Modal içinde icon picker başlat
+            $('#modal-icon-input').iconpicker({
+                title: 'Modal İçinde İkon Seçin',
+                selectedIcon: 'fas fa-heart',
+                iconPreview: '#modal-icon-preview',
+                iconButton: '#modal-icon-button',
+                modalMode: true,  // Modal içinde kullanım
+                zIndex: 2000,     // Modal'dan çok daha yüksek z-index
+                onChange: function(iconClass) {
+                    console.log('Seçilen ikon:', iconClass);
+                }
+            });
+            
+            // Modal gösterildiğinde iconpicker'ı düzgün çalıştırmak için ek ayarlar
+            $('#iconModal').on('shown.bs.modal', function() {
+                // Modal içinde dropdown açılır kapanır olduğundan emin ol
+                var iconButton = $('#modal-icon-button');
+                
+                // Dropdown açıldığında modal'ın kapanmasını engelle
+                $(document).on('mousedown.modalControl', function(e) {
+                    if ($(e.target).closest('.iconpicker-dropdown').length || 
+                        $(e.target).closest('.iconpicker-search').length) {
+                        e.stopPropagation();
+                        return false;
+                    }
+                });
+            });
+            
+            // Modal kapandığında olayları temizle
+            $('#iconModal').on('hidden.bs.modal', function() {
+                $(document).off('mousedown.modalControl');
+            });
+            
+            // Seç butonuna tıklandığında
+            $('#select-icon-btn').on('click', function() {
+                var selectedIcon = $('#modal-icon-input').val();
+                
+                // Seçilen ikonu ana sayfada göster
+                $('#selected-icon-preview').attr('class', 'preview-icon ' + selectedIcon);
+                $('#selected-icon-class').text(selectedIcon);
+                
+                // Modal'ı kapat
+                $('#iconModal').modal('hide');
+            });
+        });
+    </script>
+</body>
+</html> 

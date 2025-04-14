@@ -1,0 +1,374 @@
+/**
+ * jQuery Icon Picker
+ * v1.0.0
+ * Bootstrap 5.3.3 ve Font Awesome 5 uyumlu şık icon seçici
+ */
+
+/* Preview Icon Stili */
+.preview-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-right: none;
+    border-top-left-radius: 0.375rem;
+    border-bottom-left-radius: 0.375rem;
+}
+
+.preview-icon i {
+    font-size: 1.25rem;
+    color: #000 !important;
+}
+
+/* Dropdown Stilleri */
+.iconpicker-dropdown {
+    position: absolute;
+    z-index: 1040;
+    width: 320px;
+    background-color: #fff;
+    border-radius: 0.375rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    display: none;
+    overflow: hidden;
+}
+
+.iconpicker-dropdown.show {
+    display: block;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Modal içindeki dropdown için */
+.iconpicker-modal-mode {
+    z-index: 1056 !important;
+    position: fixed;
+}
+
+/* Header Stili */
+.iconpicker-header {
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+/* Arama Alanı */
+.iconpicker-search {
+    position: relative;
+    z-index: 1041;
+}
+
+.iconpicker-search .form-control {
+    padding-left: 2.5rem;
+    cursor: text !important;
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    z-index: 1042;
+    pointer-events: auto !important;
+}
+
+.iconpicker-search-input-modal {
+    position: relative;
+    z-index: 1058 !important;
+    pointer-events: auto;
+    cursor: text;
+}
+
+.iconpicker-search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    z-index: 1043;
+    pointer-events: none;
+}
+
+/* İçerik Alanı */
+.iconpicker-content {
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 0.5rem;
+    padding-bottom: 1rem;
+}
+
+/* Arama Sonuçları */
+.iconpicker-search-results {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    color: #6c757d;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: 0.5rem;
+}
+
+/* İkon Grid */
+.iconpicker-icons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+    padding: 0.5rem;
+    padding-bottom: 1rem;
+}
+
+/* İkon Stilleri */
+.iconpicker-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 3rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    color: #495057;
+    background-color: #f8f9fa;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.iconpicker-icon i {
+    font-size: 1.25rem;
+}
+
+.iconpicker-icon:hover {
+    background-color: #e9ecef;
+    color: #0d6efd;
+    transform: translateY(-2px);
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.iconpicker-icon.selected {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+    border-color: rgba(13, 110, 253, 0.25);
+}
+
+.iconpicker-icon.selected:hover {
+    background-color: rgba(13, 110, 253, 0.15);
+}
+
+/* Kategori Stilleri */
+.iconpicker-categories {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+}
+
+.iconpicker-categories::-webkit-scrollbar {
+    height: 4px;
+}
+
+.iconpicker-categories::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 4px;
+}
+
+.iconpicker-categories::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.iconpicker-category {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: #6c757d;
+    background-color: #fff;
+    white-space: nowrap;
+    transition: all 0.15s ease-in-out;
+}
+
+.iconpicker-category:hover {
+    color: #0d6efd;
+    background-color: #f8f9fa;
+}
+
+.iconpicker-category.active {
+    color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.1);
+    border-color: rgba(13, 110, 253, 0.25);
+    font-weight: 500;
+}
+
+/* Scrollbar Stilleri */
+.iconpicker-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.iconpicker-content::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 3px;
+}
+
+.iconpicker-content::-webkit-scrollbar-thumb {
+    background: #ced4da;
+    border-radius: 3px;
+}
+
+.iconpicker-content::-webkit-scrollbar-thumb:hover {
+    background: #adb5bd;
+}
+
+/* Inline Mode Container */
+.iconpicker-inline-container {
+    position: relative;
+    width: 100%;
+    margin-top: 10px;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.375rem;
+    overflow: hidden;
+    z-index: 1040;
+}
+
+.iconpicker-inline-modal-mode {
+    z-index: 1056;
+}
+
+/* Animasyonlar */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Dark Mode sadece iconpicker bileşenlerini etkileyen kodlar */
+body.dark-mode .iconpicker-dropdown {
+    background-color: #212529;
+    border-color: rgba(255, 255, 255, 0.125);
+}
+
+body.dark-mode .iconpicker-header {
+    border-color: rgba(255, 255, 255, 0.125);
+    background-color: #343a40;
+}
+
+body.dark-mode .iconpicker-search .form-control {
+    background-color: #343a40;
+    border-color: rgba(255, 255, 255, 0.125);
+    color: #f8f9fa;
+}
+
+body.dark-mode .iconpicker-search-icon {
+    color: #adb5bd;
+}
+
+body.dark-mode .iconpicker-icon {
+    background-color: #343a40;
+    border-color: rgba(255, 255, 255, 0.125);
+    color: #adb5bd;
+}
+
+body.dark-mode .iconpicker-icon:hover {
+    background-color: #495057;
+    color: #6ea8fe;
+}
+
+body.dark-mode .iconpicker-icon.selected {
+    background-color: rgba(110, 168, 254, 0.1);
+    color: #6ea8fe;
+    border-color: rgba(110, 168, 254, 0.25);
+}
+
+body.dark-mode .iconpicker-category {
+    background-color: #343a40;
+    border-color: rgba(255, 255, 255, 0.125);
+    color: #adb5bd;
+}
+
+body.dark-mode .iconpicker-category:hover {
+    background-color: #495057;
+    color: #6ea8fe;
+}
+
+body.dark-mode .iconpicker-category.active {
+    background-color: rgba(110, 168, 254, 0.1);
+    color: #6ea8fe;
+    border-color: rgba(110, 168, 254, 0.25);
+}
+
+body.dark-mode .iconpicker-search-results {
+    background-color: #343a40;
+    border-color: rgba(255, 255, 255, 0.05);
+    color: #adb5bd;
+}
+
+body.dark-mode .iconpicker-content::-webkit-scrollbar-track {
+    background: #343a40;
+}
+
+body.dark-mode .iconpicker-content::-webkit-scrollbar-thumb {
+    background: #495057;
+}
+
+body.dark-mode .iconpicker-content::-webkit-scrollbar-thumb:hover {
+    background: #6c757d;
+}
+
+/* Touch Cihazlar İçin */
+@media (pointer: coarse) {
+    .iconpicker-search .form-control {
+        font-size: 16px !important;
+    }
+}
+
+.iconpicker-inline-input {
+    cursor: pointer;
+}
+
+.iconpicker-inline-container .iconpicker-header {
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.iconpicker-inline-container .iconpicker-content {
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.iconpicker-inline-container .iconpicker-footer {
+    padding: 0.75rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.iconpicker-inline-container .iconpicker-icons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+}
+
+/* Dark Mode için inline mode stilleri */
+body.dark-mode .iconpicker-wrapper .iconpicker-inline-container {
+    background-color: #212529;
+    border-color: rgba(255, 255, 255, 0.125);
+}
+
+body.dark-mode .iconpicker-wrapper .iconpicker-inline-container .iconpicker-header {
+    border-color: rgba(255, 255, 255, 0.125);
+    background-color: #343a40;
+}
+
+.iconpicker-search input {
+    padding-left: 35px;
+    position: relative;
+    z-index: 4;
+} 

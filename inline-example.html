@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inline İkon Seçici Örneği</title>
+    
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome 5 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    
+    <!-- Icon Picker CSS -->
+    <link href="css/iconpicker.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h3>Inline İkon Seçici Örneği</h3>
+            </div>
+            <div class="card-body">
+                <p class="lead">Bu örnek, IconPicker'ı dropdown yerine inputun altında doğrudan görüntüler.</p>
+                
+                <hr>
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5>Normal Kullanım</h5>
+                        <input type="text" class="form-control icon-picker" id="inline-icon-input" value="fas fa-heart" placeholder="İkon seçmek için tıklayın">
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h5>Modal İçinde Kullanım</h5>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#iconModal">
+                            <i class="fas fa-icons me-2"></i> Modal İçinde İkon Seçin
+                        </button>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h5>Kod Örneği</h5>
+                        <pre><code>// Özel Ayarlar ile Başlat
+$('#inline-icon-input').iconpicker({
+    title: 'İnline İkon Seçin',
+    selectedIcon: 'fas fa-heart',
+    inlineMode: true // Bu, dropdown yerine direkt görüntüleme sağlar
+});
+
+// Veya Sadece Sınıf Kullanarak Otomatik Başlat
+&lt;input type="text" class="form-control icon-picker" value="fas fa-heart"&gt;</code></pre>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h5>Otomatik Başlatma Örneği</h5>
+                        <p>Sadece input'a <code>icon-picker</code> sınıfı vererek otomatik başlatma:</p>
+                        <input type="text" class="form-control icon-picker" value="fas fa-star" placeholder="İkon seçmek için tıklayın">
+                        
+                        <pre class="mt-3"><code>&lt;!-- Sadece bir input ile kullanım --&gt;
+&lt;input type="text" class="form-control icon-picker" value="fas fa-star"&gt;</code></pre>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h5>Modal İçinde Otomatik Başlatma</h5>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#autoIconModal">
+                            <i class="fas fa-magic me-2"></i> Modal İçinde Otomatik İkon Seçici
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="iconModal" tabindex="-1" aria-labelledby="iconModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="iconModalLabel">Modal İçinde İkon Seçin</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control icon-picker" id="modal-inline-icon-input" value="fas fa-heart" placeholder="İkon seçmek için tıklayın">
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Önemli:</strong> Modal içinde kullanımda otomatik yapı oluşturulur. Özel ayarlar için <code>modalMode: true</code> 
+                        seçeneğini kullanabilirsiniz. Normal input olarak düşünün, backend'e veri gönderirken icon-picker sınıfını temizlemenize 
+                        gerek yoktur.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary" id="select-icon-btn">Seç</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Otomatik Başlatma için Modal -->
+    <div class="modal fade" id="autoIconModal" tabindex="-1" aria-labelledby="autoIconModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="autoIconModalLabel">Otomatik Modal İkon Seçici</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Modal içinde bile sadece tek bir input etiketi kullanarak iconpicker başlatılabilir:</p>
+                    <input type="text" class="form-control icon-picker" value="fas fa-bolt" placeholder="İkon seçmek için tıklayın">
+                    
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Not:</strong> Otomatik başlatmada modal içini kullanırken, modal açıldıktan sonra ikonları yüklemek için 
+                        <code>modalMode: true</code> ayarını aktif etmeniz önerilir.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Font Awesome Iconset JS -->
+    <script src="js/iconset/iconset-fontawesome-5-all.js"></script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Icon Picker JS -->
+    <script src="js/iconpicker.js"></script>
+    
+    <script>
+        $(function() {
+            // Normal inline mode
+            $('#inline-icon-input').iconpicker({
+                title: 'İnline İkon Seçin',
+                selectedIcon: 'fas fa-heart',
+                inlineMode: true
+            });
+            
+            // Modal içinde inline mode
+            $('#modal-inline-icon-input').iconpicker({
+                title: 'Modal İçinde İkon Seçin',
+                selectedIcon: 'fas fa-heart',
+                modalMode: true,
+                inlineMode: true,
+                zIndex: 1056
+            });
+            
+            // Seç butonuna tıklandığında
+            $('#select-icon-btn').on('click', function() {
+                var modalInput = $('#modal-inline-icon-input');
+                var selectedIcon = modalInput.val();
+                var targetInput = $('#inline-icon-input');
+                
+                // İkon seçimini uygula
+                targetInput.val(selectedIcon);
+                
+                // Değişiklik olayını tetikle
+                targetInput.trigger('change');
+                
+                // Modal'ı kapat
+                $('#iconModal').modal('hide');
+            });
+        });
+    </script>
+</body>
+</html> 

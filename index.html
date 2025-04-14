@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Icon Picker - Font Awesome 5</title>
+    
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome 5 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    
+    <!-- Icon Picker CSS -->
+    <link href="css/iconpicker.css" rel="stylesheet">
+    
+    <style>
+        body {
+            padding: 2rem;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 960px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            background-color: rgba(0, 0, 0, 0.02);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        pre {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            border: 1px solid #e9ecef;
+        }
+        
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .preview-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .selected-icon-text {
+            padding: 8px 12px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 14px;
+            color: #495057;
+        }
+        
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: #212529;
+            color: #dee2e6;
+        }
+        
+        body.dark-mode .card {
+            background-color: #343a40;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
+        }
+        
+        body.dark-mode .card-header {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        body.dark-mode pre {
+            background-color: #2b3035;
+            border-color: #495057;
+            color: #e9ecef;
+        }
+        
+        body.dark-mode .form-control,
+        body.dark-mode .form-select,
+        body.dark-mode .input-group-text {
+            background-color: #343a40;
+            border-color: rgba(255, 255, 255, 0.1);
+            color: #e9ecef;
+        }
+        
+        body.dark-mode .btn-outline-secondary {
+            color: #adb5bd;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        body.dark-mode .btn-outline-secondary:hover {
+            background-color: #495057;
+            color: #fff;
+        }
+        
+        body.dark-mode .selected-icon-text {
+            background-color: #343a40;
+            color: #e9ecef;
+        }
+        
+        body.dark-mode .text-muted {
+            color: #adb5bd !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="d-flex align-items-center mb-4">
+            <h1 class="mb-0 me-auto">
+                <i class="fas fa-icons text-primary me-2"></i>
+                jQuery Icon Picker
+            </h1>
+            <small class="text-muted">Font Awesome 5 ve Bootstrap 5.3.3 Uyumlu</small>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Demolar</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="mb-3">1. Temel Kullanım</h6>
+                        <div class="mb-4">
+                            <div class="input-group">
+                                <span class="input-group-text"><i id="demo1-preview" class="fas fa-heart"></i></span>
+                                <input type="text" class="form-control" id="demo1-input" value="fas fa-heart" placeholder="İkon seçmek için tıklayın">
+                                <button class="btn btn-outline-secondary" type="button" id="demo1-button">İkon Seç</button>
+                            </div>
+                            <div class="form-text">Seçilen: <span class="selected-icon-text" id="demo1-selected">fas fa-heart</span></div>
+                        </div>
+
+                        <h6 class="mb-3">2. Sadece Buton</h6>
+                        <div class="mb-4">
+                            <button class="btn btn-primary" id="demo2-button">
+                                <i id="demo2-preview" class="fas fa-star me-2"></i> İkon Seçin
+                            </button>
+                            <input type="hidden" id="demo2-input" value="fas fa-star">
+                            <div class="form-text mt-2">Seçilen: <span class="selected-icon-text" id="demo2-selected">fas fa-star</span></div>
+                        </div>
+
+                        <h6 class="mb-3">3. Form İçinde</h6>
+                        <form class="mb-4">
+                            <div class="mb-3">
+                                <label class="form-label">Kullanıcı Adı</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i id="demo3-preview" class="fas fa-user"></i>
+                                    </span>
+                                    <input type="text" class="form-control" placeholder="Kullanıcı adınız">
+                                    <button class="btn btn-outline-secondary" type="button" id="demo3-button">
+                                        <i class="fas fa-cog"></i>
+                                    </button>
+                                </div>
+                                <input type="hidden" id="demo3-input" value="fas fa-user">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Site Adresi</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i id="demo4-preview" class="fas fa-globe"></i>
+                                    </span>
+                                    <input type="text" class="form-control" placeholder="https://ornek.com">
+                                    <button class="btn btn-outline-secondary" type="button" id="demo4-button">
+                                        <i class="fas fa-cog"></i>
+                                    </button>
+                                </div>
+                                <input type="hidden" id="demo4-input" value="fas fa-globe">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Kullanım</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6>1. Gerekli dosyaları ekleyin:</h6>
+                        <pre><code>&lt;!-- Bootstrap 5.3.3 CSS --&gt;
+&lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"&gt;
+
+&lt;!-- Font Awesome 5 CSS --&gt;
+&lt;link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"&gt;
+
+&lt;!-- Icon Picker CSS --&gt;
+&lt;link href="css/iconpicker.css" rel="stylesheet"&gt;
+
+&lt;!-- jQuery --&gt;
+&lt;script src="https://code.jquery.com/jquery-3.6.0.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- Bootstrap 5.3.3 JS --&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- Icon Picker JS --&gt;
+&lt;script src="js/iconpicker.js"&gt;&lt;/script&gt;</code></pre>
+
+                        <h6 class="mt-3">2. HTML yapısını oluşturun:</h6>
+                        <pre><code>&lt;div class="input-group"&gt;
+    &lt;span class="input-group-text"&gt;&lt;i id="icon-preview" class="fas fa-heart"&gt;&lt;/i&gt;&lt;/span&gt;
+    &lt;input type="text" class="form-control" id="icon-input" value="fas fa-heart"&gt;
+    &lt;button class="btn btn-outline-secondary" type="button" id="icon-button"&gt;İkon Seç&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+
+                        <h6 class="mt-3">3. JavaScript ile başlatın:</h6>
+                        <pre><code>$(document).ready(function() {
+    $('#icon-input').iconpicker({
+        title: 'İkon Seçin',
+        selectedIcon: 'fas fa-heart',
+        iconPreview: '#icon-preview',
+        iconButton: '#icon-button',
+        onChange: function(iconClass) {
+            console.log('Seçilen ikon: ' + iconClass);
+        }
+    });
+});</code></pre>
+
+                        <div class="alert alert-info mt-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Akıllı Dosya Yolu Tespiti:</strong> IconPicker dosya yollarını otomatik olarak tespit eder. İkonları kütüphanenin bulunduğu dizindeki <code>iconset/iconset-fontawesome-5-all.js</code> dosyasından otomatik olarak yükler.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Seçenekler</h5>
+                    </div>
+                    <div class="card-body">
+                        <pre><code>$('#icon-input').iconpicker({
+    // Başlık
+    title: 'İkon Seçin',
+    
+    // Başlangıç ikonu
+    selectedIcon: 'fas fa-heart',
+    
+    // Varsayılan kategori
+    defaultCategory: 'solid',
+    
+    // İkon önizleme elementi
+    iconPreview: '#icon-preview',
+    
+    // İkon buton seçici
+    iconButton: '#icon-button',
+    
+    // Seçimde kapat
+    hideOnSelect: true,
+    
+    // Alt bilgi göster
+    showFooter: true,
+    
+    // Arama metni
+    searchText: 'İkon Ara...',
+    
+    // Sonuç bulunamadı metni
+    noResultsText: 'Sonuç bulunamadı',
+    
+    // İkon seçildiğinde callback
+    onChange: function(iconClass) {
+        console.log('Seçilen ikon: ' + iconClass);
+    }
+});</code></pre>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Metotlar</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <code>showDropdown</code>
+                                <span class="text-muted">Picker'ı açar</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <code>hideDropdown</code>
+                                <span class="text-muted">Picker'ı kapatır</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <code>toggleDropdown</code>
+                                <span class="text-muted">Açık/kapalı durumunu değiştirir</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <button class="btn btn-dark dark-mode-toggle" id="darkModeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- JS Kaynakları -->
+    <!-- jQuery - Önce jQuery yüklenmeli -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Font Awesome Iconset JS -->
+    <script src="js/iconset/iconset-fontawesome-5-all.js"></script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Icon Picker JS - En son bu yüklenmeli -->
+    <script src="js/iconpicker.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Demo 1: Temel Kullanım
+            $('#demo1-input').iconpicker({
+                title: 'İkon Seçin',
+                selectedIcon: 'fas fa-heart',
+                iconPreview: '#demo1-preview',
+                iconButton: '#demo1-button',
+                onChange: function(iconClass) {
+                    $('#demo1-selected').text(iconClass);
+                }
+            });
+            
+            // Demo 2: Sadece Buton
+            $('#demo2-input').iconpicker({
+                title: 'İkon Seçin',
+                selectedIcon: 'fas fa-star',
+                iconPreview: '#demo2-preview',
+                iconButton: '#demo2-button',
+                onChange: function(iconClass) {
+                    $('#demo2-selected').text(iconClass);
+                }
+            });
+            
+            // Demo 3: Form İçinde
+            $('#demo3-input').iconpicker({
+                title: 'Kullanıcı İkonu Seçin',
+                selectedIcon: 'fas fa-user',
+                iconPreview: '#demo3-preview',
+                iconButton: '#demo3-button',
+                defaultCategory: 'solid'
+            });
+            
+            // Demo 4: Site Adresi
+            $('#demo4-input').iconpicker({
+                title: 'Site İkonu Seçin',
+                selectedIcon: 'fas fa-globe',
+                iconPreview: '#demo4-preview',
+                iconButton: '#demo4-button',
+                defaultCategory: 'solid'
+            });
+            
+            // Dark Mode Toggle
+            $('#darkModeToggle').on('click', function() {
+                $('body').toggleClass('dark-mode');
+                
+                var isDarkMode = $('body').hasClass('dark-mode');
+                if (isDarkMode) {
+                    $(this).html('<i class="fas fa-sun"></i>');
+                } else {
+                    $(this).html('<i class="fas fa-moon"></i>');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

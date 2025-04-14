@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+</head>
+<body>
+    <h1>IconSet Test</h1>
+    <div id="result"></div>
+
+    <!-- Önce jQuery yüklenmeli -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Sonra Font Awesome Iconset JS -->
+    <script src="js/iconset/iconset-fontawesome-5-all.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            var resultDiv = document.getElementById('result');
+            
+            // FontAwesomeIconset kontrolü
+            if (window.FontAwesomeIconset) {
+                resultDiv.innerHTML += '<p style="color:green">FontAwesomeIconset mevcut.</p>';
+                
+                // icons dizisi kontrolü
+                if (window.FontAwesomeIconset.icons && window.FontAwesomeIconset.icons.length) {
+                    resultDiv.innerHTML += '<p style="color:green">icons dizisi mevcut: ' + window.FontAwesomeIconset.icons.length + ' ikon bulundu.</p>';
+                } else {
+                    resultDiv.innerHTML += '<p style="color:red">icons dizisi bulunamadı veya boş.</p>';
+                }
+                
+                // allVersions kontrolü
+                if (window.FontAwesomeIconset.allVersions && window.FontAwesomeIconset.allVersions.length) {
+                    resultDiv.innerHTML += '<p style="color:green">allVersions dizisi mevcut: ' + window.FontAwesomeIconset.allVersions.length + ' versiyon bulundu.</p>';
+                    
+                    // İlk versiyon içinde icons dizisi kontrolü
+                    if (window.FontAwesomeIconset.allVersions[0].icons && window.FontAwesomeIconset.allVersions[0].icons.length) {
+                        resultDiv.innerHTML += '<p style="color:green">allVersions[0].icons dizisi mevcut: ' + window.FontAwesomeIconset.allVersions[0].icons.length + ' ikon bulundu.</p>';
+                    } else {
+                        resultDiv.innerHTML += '<p style="color:red">allVersions[0].icons dizisi bulunamadı veya boş.</p>';
+                    }
+                } else {
+                    resultDiv.innerHTML += '<p style="color:red">allVersions dizisi bulunamadı veya boş.</p>';
+                }
+                
+                // Örnek ikonları göster
+                if (window.FontAwesomeIconset.icons && window.FontAwesomeIconset.icons.length > 0) {
+                    resultDiv.innerHTML += '<p>İlk 5 ikon:</p><ul>';
+                    for (var i = 0; i < 5 && i < window.FontAwesomeIconset.icons.length; i++) {
+                        resultDiv.innerHTML += '<li>' + window.FontAwesomeIconset.icons[i] + '</li>';
+                    }
+                    resultDiv.innerHTML += '</ul>';
+                }
+            } else {
+                resultDiv.innerHTML += '<p style="color:red">FontAwesomeIconset tanımlanmamış. JS dosyası doğru yüklenmemiş olabilir.</p>';
+                
+                // global değişkenleri göster
+                resultDiv.innerHTML += '<p>Global değişkenler:</p><ul>';
+                for (var key in window) {
+                    if (key.toLowerCase().indexOf('icon') !== -1 || key.toLowerCase().indexOf('font') !== -1 || key.toLowerCase().indexOf('awesome') !== -1) {
+                        resultDiv.innerHTML += '<li>' + key + '</li>';
+                    }
+                }
+                resultDiv.innerHTML += '</ul>';
+            }
+        });
+    </script>
+</body>
+</html> 
