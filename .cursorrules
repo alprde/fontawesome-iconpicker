@@ -8,6 +8,8 @@ yapacağın şeyleri sürekli bana açıklamana gerek yok. tüm işlemleri bitir
 
 değişiklik yapmadan önce bana yapacağın değişikliği ve neden yapacağını açıkla ve benden onay iste. onay verirsem değişiklik yap. değişiklikleri yapmadan önce yapılacak değişikliğin proje yapısnı ve çalışma mantığını bozup bozmayacağını kontrol et ve buna göre değişiklik yap.
 
+senden bir değişiklik ya da bir hata düzeltme isteği geldiğinde sadece ilgili kodu düzelt ve mevcut yapının çalışma şeklini ve mantığını bozmadığına dikkat et.
+
 proje yapısnı ve stabilliğini korumaya çalış.
 
 inline css kullanmıyorsun. her zaman temiz kod kurallarına uyuyorsun.
