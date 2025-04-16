@@ -928,7 +928,7 @@
                     var $container = this.element.next('.iconpicker-inline-container');
                     
                     if ($container.length > 0) {
-                        // Seçilen ikonu göster ve bütün ikonları seçili stilinden çıkart
+                // Seçilen ikonu göster ve bütün ikonları seçili stilinden çıkart
                         $container.find('.iconpicker-icon').removeClass('selected');
                         
                         // İkon sınıfını parçalara ayır
@@ -953,20 +953,20 @@
                         // Seçilen ikonu işaretle 
                         if (iconPrefix && iconName) {
                             $container.find('.iconpicker-icon[data-icon="' + iconClass + '"]').addClass('selected');
-                        }
-                        
-                        // Değeri input'a ata
-                        this.element.val(iconClass);
-                        
-                        // Eğer bir callback tanımlanmışsa çağır
-                        if (typeof this.settings.onSelect === 'function') {
-                            this.settings.onSelect.call(this, iconClass);
-                        }
-                        
-                        // Seçilen ikon için önizleme göster
-                        if (this.settings.iconPreview && $(this.settings.iconPreview).length > 0) {
-                            // Preview elementini temizle ve yeni ikonu ata
-                            $(this.settings.iconPreview).attr('class', '').addClass(iconClass);
+                }
+                
+                // Değeri input'a ata
+                this.element.val(iconClass);
+                
+                // Eğer bir callback tanımlanmışsa çağır
+                if (typeof this.settings.onSelect === 'function') {
+                    this.settings.onSelect.call(this, iconClass);
+                }
+                
+                // Seçilen ikon için önizleme göster
+                if (this.settings.iconPreview && $(this.settings.iconPreview).length > 0) {
+                    // Preview elementini temizle ve yeni ikonu ata
+                    $(this.settings.iconPreview).attr('class', '').addClass(iconClass);
                         }
                     }
                 } catch (error) {
@@ -999,7 +999,7 @@
             
             // Dropdown'u gizle - Eğer dropdown tanımlıysa
             if (this.dropdown) {
-                this.hideDropdown();
+            this.hideDropdown();
             }
             
             // Eğer bir callback tanımlanmışsa çağır
@@ -1129,98 +1129,98 @@
             // İkonları yükle
             setTimeout(function() {
                 try {
-                    var categoryData = self.settings.categories[category];
-                    var prefix = categoryData.prefix;
+                var categoryData = self.settings.categories[category];
+                var prefix = categoryData.prefix;
+                
+                // İlgili kategori için ikon verilerini kontrol et
+                if (!self.iconData || !self.iconData[category] || !Array.isArray(self.iconData[category])) {
+                    self.iconsContainer.html('<div class="alert alert-warning">Bu kategori için ikonlar bulunamadı.</div>');
+                    return;
+                }
+                
+                var icons = self.iconData[category];
+                var activeIconClass = self.element.val() || self.settings.selectedIcon;
+                var activeIconFound = false;
+                var activeIconIndex = -1;
+                var faIcon = '';
+                
+                // Önce fa-* kısmını çıkartarak ikon adını alalım
+                if (activeIconClass) {
+                    var activeClass = activeIconClass.split(' ');
+                    for (var k = 0; k < activeClass.length; k++) {
+                        if (activeClass[k].startsWith('fa-')) {
+                            faIcon = activeClass[k].replace('fa-', '');
+                            break;
+                        }
+                    }
+                }
+                
+                // İkon konteynerini temizle
+                var iconsWrapper = $('<div class="iconpicker-icons"></div>');
+                
+                // İkonları ekle
+                $.each(icons, function(i, icon) {
+                    // İkon sınıfını oluştur
+                    var iconClass = '';
                     
-                    // İlgili kategori için ikon verilerini kontrol et
-                    if (!self.iconData || !self.iconData[category] || !Array.isArray(self.iconData[category])) {
-                        self.iconsContainer.html('<div class="alert alert-warning">Bu kategori için ikonlar bulunamadı.</div>');
-                        return;
+                    // Eğer ikon adı tam bir sınıf ise (eski formatla uyumluluk için)
+                    if (icon.indexOf(' ') !== -1) {
+                        iconClass = icon; // Tam sınıf
+                    } else {
+                        // Yeni format: ikon adları prefix olmadan geliyor
+                        iconClass = prefix + ' fa-' + icon;
                     }
                     
-                    var icons = self.iconData[category];
-                    var activeIconClass = self.element.val() || self.settings.selectedIcon;
-                    var activeIconFound = false;
-                    var activeIconIndex = -1;
-                    var faIcon = '';
+                    // Temiz HTML yapısı oluştur
+                    var iconHtml = self.settings.templates.iconItem
+                        .replace(/\{icon\}/g, iconClass);
                     
-                    // Önce fa-* kısmını çıkartarak ikon adını alalım
+                    var iconElem = $(iconHtml);
+                    
+                    // Icon tag'ının içinde sadece ikon sınıfının olduğundan emin ol
+                    iconElem.find('i').attr('class', '').addClass(iconClass);
+                    
+                    // Aktif ikonu kontrol et (seçili ikonu işaretle)
+                    var isActive = false;
+                    
+                    // İkon isim kontrolü - hem isim hem prefix kontrolü yap
                     if (activeIconClass) {
-                        var activeClass = activeIconClass.split(' ');
-                        for (var k = 0; k < activeClass.length; k++) {
-                            if (activeClass[k].startsWith('fa-')) {
-                                faIcon = activeClass[k].replace('fa-', '');
-                                break;
-                            }
+                        // Prefix kontrolü
+                        var iconPrefix = self._getPrefixFromIconClass(activeIconClass);
+                        var currentPrefix = self._getPrefixFromIconClass(iconClass);
+                        
+                        // İkon adı kontrolü
+                        if (faIcon && icon === faIcon && iconPrefix === currentPrefix) {
+                            isActive = true;
+                            activeIconFound = true;
+                            activeIconIndex = i;
+                        }
+                        
+                        // Tam eşleşme kontrolü
+                        if (!isActive && activeIconClass === iconClass) {
+                            isActive = true;
+                            activeIconFound = true;
+                            activeIconIndex = i;
                         }
                     }
                     
-                    // İkon konteynerini temizle
-                    var iconsWrapper = $('<div class="iconpicker-icons"></div>');
+                    // Seçili sınıfını ekle
+                    if (isActive) {
+                        iconElem.addClass('selected');
+                    }
                     
-                    // İkonları ekle
-                    $.each(icons, function(i, icon) {
-                        // İkon sınıfını oluştur
-                        var iconClass = '';
-                        
-                        // Eğer ikon adı tam bir sınıf ise (eski formatla uyumluluk için)
-                        if (icon.indexOf(' ') !== -1) {
-                            iconClass = icon; // Tam sınıf
-                        } else {
-                            // Yeni format: ikon adları prefix olmadan geliyor
-                            iconClass = prefix + ' fa-' + icon;
-                        }
-                        
-                        // Temiz HTML yapısı oluştur
-                        var iconHtml = self.settings.templates.iconItem
-                            .replace(/\{icon\}/g, iconClass);
-                        
-                        var iconElem = $(iconHtml);
-                        
-                        // Icon tag'ının içinde sadece ikon sınıfının olduğundan emin ol
-                        iconElem.find('i').attr('class', '').addClass(iconClass);
-                        
-                        // Aktif ikonu kontrol et (seçili ikonu işaretle)
-                        var isActive = false;
-                        
-                        // İkon isim kontrolü - hem isim hem prefix kontrolü yap
-                        if (activeIconClass) {
-                            // Prefix kontrolü
-                            var iconPrefix = self._getPrefixFromIconClass(activeIconClass);
-                            var currentPrefix = self._getPrefixFromIconClass(iconClass);
+                    // İkon tıklama olayı (Inline mode)
+                    iconElem.on('click', function() {
+                        try {
+                            // İkon elementini seç
+                            var $icon = $(this);
                             
-                            // İkon adı kontrolü
-                            if (faIcon && icon === faIcon && iconPrefix === currentPrefix) {
-                                isActive = true;
-                                activeIconFound = true;
-                                activeIconIndex = i;
-                            }
+                            // Diğer ikonlardan selected sınıfını kaldır
+                            iconsWrapper.find('.iconpicker-icon').removeClass('selected');
                             
-                            // Tam eşleşme kontrolü
-                            if (!isActive && activeIconClass === iconClass) {
-                                isActive = true;
-                                activeIconFound = true;
-                                activeIconIndex = i;
-                            }
-                        }
-                        
-                        // Seçili sınıfını ekle
-                        if (isActive) {
-                            iconElem.addClass('selected');
-                        }
-                        
-                        // İkon tıklama olayı (Inline mode)
-                        iconElem.on('click', function() {
-                            try {
-                                // İkon elementini seç
-                                var $icon = $(this);
-                                
-                                // Diğer ikonlardan selected sınıfını kaldır
-                                iconsWrapper.find('.iconpicker-icon').removeClass('selected');
-                                
-                                // Bu ikona selected sınıfı ekle
-                                $icon.addClass('selected');
-                                
+                            // Bu ikona selected sınıfı ekle
+                            $icon.addClass('selected');
+                            
                                 // İkon sınıfını al
                                 var selectedIconClass = $icon.data('icon');
                                 
@@ -1229,40 +1229,40 @@
                                     // Ikon değerini güncelle - doğrudan inline modda çalışan setIcon metodunu kullan
                                     self.setIcon(selectedIconClass);
                                 }
-                            } catch (error) {
-                                console.error('İkon seçimi sırasında hata:', error);
-                            }
-                        });
-                        
-                        iconsWrapper.append(iconElem);
+                        } catch (error) {
+                            console.error('İkon seçimi sırasında hata:', error);
+                        }
                     });
                     
-                    // İkonları ekrana ekle
-                    self.iconsContainer.html('');
+                    iconsWrapper.append(iconElem);
+                });
+                
+                // İkonları ekrana ekle
+                self.iconsContainer.html('');
+                
+                // Sonuç bilgisi
+                var resultCount = icons.length;
+                var resultsInfo = $('<div class="iconpicker-search-results"></div>');
+                resultsInfo.html(resultCount + ' ikon bulundu');
+                resultsInfo.hide(); // Başlangıçta gizle, arama yapılınca gösterilecek
+                
+                self.iconsContainer.append(resultsInfo);
+                self.iconsContainer.append(iconsWrapper);
+                
+                // Aktif ikona kaydır
+                if (activeIconFound && activeIconIndex > -1) {
+                    // Hesapla: Her satırda 5 ikon var, her ikon 3rem (48px) + 0.5rem (8px) boşluk
+                    // İkonun hangi satırda olduğunu bul
+                    var rowIndex = Math.floor(activeIconIndex / 5);
                     
-                    // Sonuç bilgisi
-                    var resultCount = icons.length;
-                    var resultsInfo = $('<div class="iconpicker-search-results"></div>');
-                    resultsInfo.html(resultCount + ' ikon bulundu');
-                    resultsInfo.hide(); // Başlangıçta gizle, arama yapılınca gösterilecek
+                    // Yükseklik hesapla (ikon yüksekliği + boşluk)
+                    var scrollTo = rowIndex * (48 + 8);
                     
-                    self.iconsContainer.append(resultsInfo);
-                    self.iconsContainer.append(iconsWrapper);
-                    
-                    // Aktif ikona kaydır
-                    if (activeIconFound && activeIconIndex > -1) {
-                        // Hesapla: Her satırda 5 ikon var, her ikon 3rem (48px) + 0.5rem (8px) boşluk
-                        // İkonun hangi satırda olduğunu bul
-                        var rowIndex = Math.floor(activeIconIndex / 5);
-                        
-                        // Yükseklik hesapla (ikon yüksekliği + boşluk)
-                        var scrollTo = rowIndex * (48 + 8);
-                        
-                        // Kaydır (biraz geciktirerek DOM'un yüklenmesini bekle)
-                        setTimeout(function() {
-                            self.iconsContainer.scrollTop(scrollTo);
-                        }, 100);
-                    }
+                    // Kaydır (biraz geciktirerek DOM'un yüklenmesini bekle)
+                    setTimeout(function() {
+                        self.iconsContainer.scrollTop(scrollTo);
+                    }, 100);
+                }
                 } catch (error) {
                     console.error('İkonları yüklerken hata:', error);
                     self.iconsContainer.html('<div class="alert alert-danger">İkonlar yüklenirken bir hata oluştu.</div>');
@@ -1317,6 +1317,20 @@
                 // Preview ikonunu güncelle
                 this._updatePreviewIcon();
                 
+                // İkon kategorisini belirle
+                var prefix = this._getPrefixFromIconClass(iconClass);
+                var category = this._getCategoryFromPrefix(prefix);
+                
+                // Eğer inline modda ise container içindeki ikonları güncelle
+                if (this.settings.inlineMode) {
+                    this._updateSelectedIconInInlineMode(iconClass, category);
+                } else if (this.dropdown) {
+                    // Normal mod ise ve dropdown açıksa ikonu seç ve scroll yap
+                    if (this.dropdown.hasClass('show')) {
+                        this._updateSelectedIconInDropdown(iconClass, category);
+                    }
+                }
+                
                 // Change olayını tetikle
                 this.element.trigger('change');
                 
@@ -1329,6 +1343,154 @@
             } catch (error) {
                 console.error('İkon güncellenirken hata:', error);
                 return this;
+            }
+        },
+        
+        // Inline modda seçili ikonu güncelle ve scroll yap 
+        _updateSelectedIconInInlineMode: function(iconClass, category) {
+            var self = this;
+            var $container = this.element.next('.iconpicker-inline-container');
+            
+            if ($container.length > 0) {
+                // Tüm ikonlardan seçim kaldır
+                $container.find('.iconpicker-icon').removeClass('selected');
+                
+                // Eğer geçerli bir kategori varsa ve o kategoride değilsek, kategoriyi değiştir
+                if (category && $container.find('.iconpicker-category').length > 0) {
+                    var $categoryBtn = $container.find('.iconpicker-category[data-category="' + category + '"]');
+                    
+                    if ($categoryBtn.length > 0 && !$categoryBtn.hasClass('active')) {
+                        // Önce tüm kategorileri pasif yap
+                        $container.find('.iconpicker-category').removeClass('active');
+                        // Sonra ilgili kategoriyi aktif yap
+                        $categoryBtn.addClass('active');
+                        
+                        // Kategoriyi yükle (bu, ilgili kategori ikonlarını gösterecektir)
+                        this._loadCategoryIconsInline(category);
+                        
+                        // İkonlar yüklendiğinde seçili ikonu işaretle ve scroll yap
+                        setTimeout(function() {
+                            // Eşleşen ikonu bul ve seç
+                            var $icon = $container.find('.iconpicker-icon[data-icon="' + iconClass + '"]');
+                            if ($icon.length > 0) {
+                                $icon.addClass('selected');
+                                
+                                // İkona scroll yap - düzgün görünmesi için offset hesaplaması
+                                self._scrollToIcon($icon, self.iconsContainer);
+                            }
+                        }, 350); // Kategorinin yüklenmesi için biraz daha bekle
+                        
+                        return;
+                    }
+                }
+                
+                // Eğer kategori değişmediyse sadece ikonu seç ve scroll yap
+                var $icon = $container.find('.iconpicker-icon[data-icon="' + iconClass + '"]');
+                if ($icon.length > 0) {
+                    $icon.addClass('selected');
+                    
+                    // İkona scroll yap - düzgün görünmesi için offset hesaplaması
+                    this._scrollToIcon($icon, this.iconsContainer);
+                }
+                
+                // Footer'daki ikon bilgisini güncelle (eğer varsa)
+                var $footer = $container.find('.iconpicker-footer');
+                if ($footer.length > 0) {
+                    var $selectedIconInfo = $footer.find('.iconpicker-selected-icon');
+                    if ($selectedIconInfo.length > 0) {
+                        $selectedIconInfo.html('<i class="' + iconClass + '"></i> <span>' + iconClass + '</span>');
+                    }
+                }
+            }
+        },
+        
+        // Normal dropdown modunda seçili ikonu güncelle ve scroll yap
+        _updateSelectedIconInDropdown: function(iconClass, category) {
+            var self = this;
+            
+            // Eğer dropdown açık değilse, işlemi iptal et
+            if (!this.dropdown.hasClass('show')) {
+                return;
+            }
+            
+            // Eğer geçerli bir kategori varsa ve farklı bir kategorideyse, kategoriyi değiştir
+            if (category && this.activeCategory !== category && 
+                this.dropdown.find('.iconpicker-category-button[data-category="' + category + '"]').length > 0) {
+                
+                // Kategori butonuna tıkla
+                this.dropdown.find('.iconpicker-category-button[data-category="' + category + '"]').click();
+                
+                // İkonlar yüklendiğinde seçili ikonu işaretle ve scroll yap
+                setTimeout(function() {
+                    // Tüm ikonlardan seçimi kaldır
+                    self.dropdown.find('.iconpicker-icon').removeClass('selected');
+                    
+                    // Eşleşen ikonu bul ve seç
+                    var $icon = self.dropdown.find('.iconpicker-icon[data-icon="' + iconClass + '"]');
+                    if ($icon.length === 0) {
+                        // Data-icon attribute'u yoksa, i elementi içindeki class ile karşılaştır
+                        $icon = self.dropdown.find('.iconpicker-icon').filter(function() {
+                            var iconI = $(this).find('i').attr('class');
+                            return iconI === iconClass;
+                        });
+                    }
+                    
+                    if ($icon.length > 0) {
+                        $icon.addClass('selected');
+                        
+                        // İkona scroll yap - düzgün görünmesi için offset hesaplaması
+                        self._scrollToIcon($icon, self.iconsContainer);
+                    }
+                }, 350); // Kategorinin yüklenmesi için biraz daha bekle
+                
+                return;
+            }
+            
+            // Eğer kategori değişmediyse veya kategori yoksa, sadece ikonu seç ve scroll yap
+            this.dropdown.find('.iconpicker-icon').removeClass('selected');
+            
+            // Eşleşen ikonu bul ve seç
+            var $icon = this.dropdown.find('.iconpicker-icon[data-icon="' + iconClass + '"]');
+            if ($icon.length === 0) {
+                // Data-icon attribute'u yoksa, i elementi içindeki class ile karşılaştır
+                $icon = this.dropdown.find('.iconpicker-icon').filter(function() {
+                    var iconI = $(this).find('i').attr('class');
+                    return iconI === iconClass;
+                });
+            }
+            
+            if ($icon.length > 0) {
+                $icon.addClass('selected');
+                
+                // İkona scroll yap - düzgün görünmesi için offset hesaplaması 
+                this._scrollToIcon($icon, this.iconsContainer);
+            }
+        },
+        
+        // İkona scroll yapmak için ortak fonksiyon
+        _scrollToIcon: function($icon, $container) {
+            if (!$icon || !$icon.length || !$container || !$container.length) return;
+            
+            try {
+                // Container içindeki mevcut scroll pozisyonu
+                var currentScroll = $container.scrollTop();
+                
+                // İkonun container içindeki pozisyonu (container'ın scroll pozisyonunu dikkate alarak)
+                var iconOffset = $icon.offset().top;
+                var containerOffset = $container.offset().top;
+                
+                // İkonun container'ın üst kısmına tam olarak hizalanması için gerekli scroll mesafesi
+                var newScrollPosition = currentScroll + (iconOffset - containerOffset);
+                
+                // Container içinde scroll yap
+                $container.animate({
+                    scrollTop: newScrollPosition
+                }, 300);
+                
+                // Event'i burada durdur - sayfa scrollunu engelle
+                return false;
+            } catch (e) {
+                console.error("Scroll hatası:", e);
             }
         },
         
@@ -1750,25 +1912,25 @@
     $(function() {
         // Önce global DOMContentLoaded event'inin tetiklenmesini bekleyelim
         setTimeout(function() {
-            // .icon-picker veya .iconpicker sınıflı tüm inputları otomatik başlat
-            $('.icon-picker, .iconpicker').each(function() {
-                var $input = $(this);
-                if (!$input.data('iconpicker')) {
-                    var options = {};
-                    
-                    // Input bir modal içindeyse
-                    if ($input.closest('.modal').length > 0) {
-                        options.modalMode = true;
-                        options.zIndex = 1056;
-                    }
-                    
-                    // Input'un value değeri yoksa varsayılan ikonu koy
-                    if (!$input.val()) {
-                        $input.val('fas fa-heart');
-                    }
-                    
+        // .icon-picker veya .iconpicker sınıflı tüm inputları otomatik başlat
+        $('.icon-picker, .iconpicker').each(function() {
+            var $input = $(this);
+            if (!$input.data('iconpicker')) {
+                var options = {};
+                
+                // Input bir modal içindeyse
+                if ($input.closest('.modal').length > 0) {
+                    options.modalMode = true;
+                    options.zIndex = 1056;
+                }
+                
+                // Input'un value değeri yoksa varsayılan ikonu koy
+                if (!$input.val()) {
+                    $input.val('fas fa-heart');
+                }
+                
                     // Plugin'i başlat
-                    $input.iconpicker(options);
+                $input.iconpicker(options);
                 } else {
                     // Zaten başlatılmış bir plugin var, önizleme ikonunu kontrol et ve güncelle
                     var iconpickerInstance = $input.data('iconpicker');
