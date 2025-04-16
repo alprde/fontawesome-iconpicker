@@ -13,3 +13,39 @@ senden bir değişiklik ya da bir hata düzeltme isteği istenildiğinde sadece 
 proje yapısnı ve stabilliğini korumaya çalış.
 
 inline css kullanmıyorsun. her zaman temiz kod kurallarına uyuyorsun.
+
+var ve let yerine mümkün olduğunca const kullan, ancak değişken değeri değişecekse let kullan.
+
+Fonksiyonları değiştirirken, mevcut parametre yapısını koru ve geriye dönük uyumluluğu sağla.
+
+Hata ayıklama için her zaman try-catch bloklarını kullan ve hataları konsolda göster.
+
+jQuery seçicilerini olabildiğince optimize et ve tekrar tekrar DOM seçiminden kaçın.
+
+Performans için DOM manipülasyonlarını minimize et ve mümkünse bellek önbellekleme teknikleri kullan.
+
+Değişiklik yaparken var olan kodun yapısına ve stiline sadık kal, tutarlılığı koru.
+
+Kodda kullanılan terminolojiye ve isimlendirme kurallarına uy.
+
+Bu proje bir jQuery eklentisi olduğundan, jQuery'nin plugin geliştirme konvansiyonlarına uy ve zincir yapısını koru.
+
+Fonksiyonlarda her zaman 'return this;' ifadesini kullan ki zincir metodu çalışsın.
+
+Değişiklik yaparken mantıksal bütünlüğü koru, bir değişikliğin başka bir işlevselliği bozmamasını sağla.
+
+Metotları değiştirirken protokolü olduğu gibi koru.
+
+Global namespace'i kirletmekten kaçın, her şeyi eklenti scope'u içinde tut.
+
+Tarayıcı uyumluluğunu her zaman göz önünde bulundur.
+
+Mobil uyumluluk için dokunmatik olaylarını da düzgün ele al.
+
+Bellek sızıntılarından kaçınmak için event listener'ları düzgün temizle.
+
+API kullanıcılarının beklemediği şekilde davranışları değiştirmekten kaçın.
+
+jQuery'e olan bağımlılığı minimumda tut, mümkünse standart JavaScript kullan.
+
+Performans iyileştirmeleri yap ancak kodun okunabilirliğini ve bakımını zorlaştırmamalıdır.
