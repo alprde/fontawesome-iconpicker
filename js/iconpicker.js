@@ -324,11 +324,17 @@
             // Temel yapıyı oluştur
             this.element.addClass('iconpicker-dropdown-container');
             
+            // Eğer element'in ID'si yoksa benzersiz bir ID ekleyelim
+            if (!this.element.attr('id')) {
+                this.element.attr('id', 'iconpicker_element_' + this.uniqueId);
+            }
+            
             // Önizleme grubunu oluştur
             var previewGroup = $('<div class="iconpicker-preview-group input-group"></div>');
             
-            // Önizleme ikonu div'i
-            var previewDiv = $('<div class="iconpicker-preview" id="' + this.element.attr('id') + '-preview"></div>');
+            // Önizleme ikonu div'i - Benzersiz ID ile
+            var previewDivId = this.element.attr('id') + '-preview';
+            var previewDiv = $('<div class="iconpicker-preview" id="' + previewDivId + '"></div>');
             
             // Önizleme ikonu 
             var previewIcon = $('<i class="iconpicker-preview-icon"></i>');
@@ -355,6 +361,9 @@
             // Element yapısını oluştur
             this.element.append(previewGroup);
             this.element.append(iconNameInput);
+            
+            // Eğer daha önce oluşturulmuş bir dropdown varsa kaldır
+            $('#dropdown_' + this.uniqueId).remove();
             
             // Unique ID ile dropdown oluştur
             this.dropdown = $('<div class="iconpicker-dropdown" id="dropdown_' + this.uniqueId + '"></div>');
@@ -394,6 +403,9 @@
             // Dropdown'ı sayfaya ekle
             this.dropdown.append(dropdownContent);
             $('body').append(this.dropdown);
+            
+            // Bu dropdown'ı bu iconpicker ile ilişkilendir
+            this.dropdown.data('iconpicker-instance', this);
             
             // Dropdown'ı gizle/göster düğmesi için olay
             selectButton.on('click', function(e) {
@@ -645,6 +657,8 @@
         
         // Dropdown göster
         showDropdown: function() {
+            var self = this;
+            
             if (this.dropdown.hasClass('show')) {
                 return this;
             }
@@ -652,8 +666,9 @@
             // Tüm açık dropdown'ları kapat
             $('.iconpicker-dropdown.show').each(function() {
                 var pickerId = $(this).attr('data-iconpicker-id');
-                if (pickerId && pickerId !== this.uniqueId) {
-                    var pickerInstance = $('[data-iconpicker-id="' + pickerId + '"]').data('iconpicker');
+                if (pickerId && pickerId !== self.uniqueId) {
+                    var $input = $('[data-iconpicker-id="' + pickerId + '"]');
+                    var pickerInstance = $input.data('iconpicker');
                     if (pickerInstance && typeof pickerInstance.hideDropdown === 'function') {
                         pickerInstance.hideDropdown();
                     } else {
@@ -674,7 +689,7 @@
                 if (category && this.settings.categories[category]) {
                     this.settings.defaultCategory = category;
                     
-                    // Kategorileri güncelle
+                    // Kategorileri güncelle - sadece bu dropdown için
                     this.dropdown.find('.iconpicker-category').removeClass('active');
                     this.dropdown.find('.iconpicker-category[data-category="' + category + '"]').addClass('active');
                     
@@ -694,6 +709,11 @@
                 // Modal içinde input olaylarını özel olarak yönet
                 this._setupModalSearchInput();
             }
+            
+            // Pencere yeniden boyutlandığında veya scroll edildiğinde dropdown pozisyonunu yeniden hesapla
+            $(window).on('resize.iconpicker.' + this.uniqueId + ' scroll.iconpicker.' + this.uniqueId, function() {
+                self._positionDropdown();
+            });
             
             // Dropdown gösterildi olayını tetikle
             this.element.trigger('shown.iconpicker', [this]);
@@ -973,7 +993,7 @@
                     var $container = this.element.next('.iconpicker-inline-container');
                     
                     if ($container.length > 0) {
-                // Seçilen ikonu göster ve bütün ikonları seçili stilinden çıkart
+                        // Seçilen ikonu göster ve bütün ikonları seçili stilinden çıkart
                         $container.find('.iconpicker-icon').removeClass('selected');
                         
                         // İkon sınıfını parçalara ayır
@@ -998,20 +1018,20 @@
                         // Seçilen ikonu işaretle 
                         if (iconPrefix && iconName) {
                             $container.find('.iconpicker-icon[data-icon="' + iconClass + '"]').addClass('selected');
-                }
+                        }
                 
-                // Değeri input'a ata
-                this.element.val(iconClass);
+                        // Değeri input'a ata
+                        this.element.val(iconClass);
                 
-                // Eğer bir callback tanımlanmışsa çağır
-                if (typeof this.settings.onSelect === 'function') {
-                    this.settings.onSelect.call(this, iconClass);
-                }
+                        // Eğer bir callback tanımlanmışsa çağır
+                        if (typeof this.settings.onSelect === 'function') {
+                            this.settings.onSelect.call(this, iconClass);
+                        }
                 
-                // Seçilen ikon için önizleme göster
-                if (this.settings.iconPreview && $(this.settings.iconPreview).length > 0) {
-                    // Preview elementini temizle ve yeni ikonu ata
-                    $(this.settings.iconPreview).attr('class', '').addClass(iconClass);
+                        // Sadece bu örneğin önizleme ikonunu güncelle
+                        var $preview = $container.find('.iconpicker-preview i');
+                        if ($preview.length > 0) {
+                            $preview.attr('class', '').addClass(iconClass);
                         }
                     }
                 } catch (error) {
@@ -1030,10 +1050,19 @@
                 // Input değer değişikliği olayını tetikle
                 this.element.trigger('change');
                 
-                // Önizleme görüntüsünü güncelle
-                this._updatePreviewIcon();
+                // Sadece bu iconpicker'ın önizleme ikonunu güncelle
+                var $parent = this.element.parent();
+                var $previewIcon = $parent.find('.preview-icon i');
                 
-                // Dropdown butonunu güncelle
+                // Eğer preview-icon bulunuyorsa, sadece bu iconpicker'ın preview'ini güncelle
+                if ($previewIcon.length > 0) {
+                    $previewIcon.attr('class', '').addClass(iconClass);
+                } else {
+                    // Eğer preview-icon yoksa _updatePreviewIcon metodu ile yeni oluştur
+                    this._updatePreviewIcon();
+                }
+                
+                // Dropdown butonunu güncelle (eğer varsa)
                 if (this.dropdownButton) {
                     var buttonIcon = this.dropdownButton.find('i');
                     if (buttonIcon.length > 0) {
@@ -1044,7 +1073,7 @@
             
             // Dropdown'u gizle - Eğer dropdown tanımlıysa
             if (this.dropdown) {
-            this.hideDropdown();
+                this.hideDropdown();
             }
             
             // Eğer bir callback tanımlanmışsa çağır
@@ -2228,7 +2257,7 @@
     window.addEventListener('load', function() {
         // Icon preview'leri güncelle - ama sadece ilgili iconpicker'ın preview'ini
         setTimeout(function() {
-            // Tüm ikonpicker inputlarını tara
+            // Tüm ikonpicker inputlarını tara ve her biri için kendi preview'ini güncelle
             document.querySelectorAll('.iconpicker-basic, .icon-picker, .iconpicker').forEach(function(inputElem) {
                 var $input = $(inputElem);
                 

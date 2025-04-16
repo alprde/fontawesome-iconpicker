@@ -317,7 +317,7 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="input-group">
-                                            <div class="preview-icon">
+                                            <div class="preview-icon-modal">
                                                 <i class="fas fa-star"></i>
                                             </div>
                                             <input type="text" class="form-control iconpicker-modal" name="icon" value="fas fa-star">
@@ -375,7 +375,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="input-group mb-2">
-                                    <div class="preview-icon">
+                                    <div class="preview-icon-inline">
                                         <i class="fas fa-coffee"></i>
                                     </div>
                                     <input type="text" class="form-control iconpicker-inline" name="icon" value="fas fa-coffee">
@@ -405,7 +405,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <div class="preview-icon">
+                                    <div class="preview-icon-callback">
                                         <i class="fas fa-cog"></i>
                                     </div>
                                     <input type="text" class="form-control iconpicker-callback" name="icon" value="fas fa-cog">
@@ -572,19 +572,19 @@ function setIconValue(selector, iconClass) {
             
             // Modal içinde iconpicker
             $('.iconpicker-modal').iconpicker({
-                iconPreview: '.preview-icon i',
+                iconPreview: '.preview-icon-modal i',
                 modalMode: true
             });
             
             // Inline mode
             $('.iconpicker-inline').iconpicker({
-                iconPreview: '.preview-icon i',
+                iconPreview: '.preview-icon-inline i',
                 inlineMode: true
             });
             
             // Callback örneği
             $('.iconpicker-callback').iconpicker({
-                iconPreview: '.preview-icon i'
+                iconPreview: '.preview-icon-callback i'
             }).on('change', function(e) {
                 $('#callbackResult').html(
                     '<strong>İkon değiştirildi:</strong> ' + 
