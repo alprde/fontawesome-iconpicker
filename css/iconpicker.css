@@ -148,51 +148,67 @@
     background-color: rgba(13, 110, 253, 0.15);
 }
 
+/* Kategori Container Başlığı */
+.iconpicker-categories-header {
+    display: none;
+}
+
+.iconpicker-categories-header::after {
+    display: none;
+}
+
 /* Kategori Stilleri */
 .iconpicker-categories {
     display: flex;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
+    gap: 0.25rem;
+    margin: 0.5rem 0.5rem 0.75rem 0.5rem;
+    padding: 0.5rem 0 0.25rem 0;
     overflow-x: auto;
-    padding-bottom: 0.25rem;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    background-color: transparent;
 }
 
 .iconpicker-categories::-webkit-scrollbar {
-    height: 4px;
-}
-
-.iconpicker-categories::-webkit-scrollbar-track {
-    background: #f0f0f0;
-    border-radius: 4px;
-}
-
-.iconpicker-categories::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 4px;
+    display: none;
 }
 
 .iconpicker-category {
-    border: 1px solid rgba(0, 0, 0, 0.125);
-    padding: 0.375rem 0.75rem;
-    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 0.5rem 0.75rem;
+    border-radius: 1rem;
     cursor: pointer;
-    font-size: 0.875rem;
-    color: #6c757d;
-    background-color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #4a7aff;
+    background-color: #f8f9fa;
     white-space: nowrap;
-    transition: all 0.15s ease-in-out;
+    transition: all 0.2s ease;
+    min-width: 70px;
+    text-align: center;
+}
+
+.iconpicker-category span {
+    display: inline-block;
+}
+
+/* Kategori butonları için ikon kalktığı için eski i stilini kaldırıyorum */
+.iconpicker-category i {
+    display: none;
 }
 
 .iconpicker-category:hover {
-    color: #0d6efd;
-    background-color: #f8f9fa;
+    background-color: #f1f3fa;
 }
 
 .iconpicker-category.active {
-    color: #0d6efd;
-    background-color: rgba(13, 110, 253, 0.1);
-    border-color: rgba(13, 110, 253, 0.25);
-    font-weight: 500;
+    color: #4a7aff;
+    background-color: #ebf1ff;
+    border-color: rgba(74, 122, 255, 0.2);
+    font-weight: 600;
 }
 
 /* Scrollbar Stilleri */
@@ -286,18 +302,17 @@ body.dark-mode .iconpicker-icon.selected {
 }
 
 body.dark-mode .iconpicker-category {
-    background-color: #343a40;
-    border-color: rgba(255, 255, 255, 0.125);
-    color: #adb5bd;
-}
-
-body.dark-mode .iconpicker-category:hover {
-    background-color: #495057;
+    background-color: #2c3136;
+    border-color: rgba(255, 255, 255, 0.05);
     color: #6ea8fe;
 }
 
+body.dark-mode .iconpicker-category:hover {
+    background-color: #343a40;
+}
+
 body.dark-mode .iconpicker-category.active {
-    background-color: rgba(110, 168, 254, 0.1);
+    background-color: rgba(110, 168, 254, 0.15);
     color: #6ea8fe;
     border-color: rgba(110, 168, 254, 0.25);
 }
@@ -318,6 +333,30 @@ body.dark-mode .iconpicker-content::-webkit-scrollbar-thumb {
 
 body.dark-mode .iconpicker-content::-webkit-scrollbar-thumb:hover {
     background: #6c757d;
+}
+
+body.dark-mode .iconpicker-categories {
+    background-color: transparent;
+}
+
+body.dark-mode .iconpicker-categories-header {
+    color: #8d959e;
+}
+
+body.dark-mode .iconpicker-categories-header::after {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.01));
+}
+
+body.dark-mode .iconpicker-categories::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+body.dark-mode .iconpicker-categories::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+body.dark-mode .iconpicker-categories::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
 }
 
 /* Touch Cihazlar İçin */
@@ -371,4 +410,61 @@ body.dark-mode .iconpicker-wrapper .iconpicker-inline-container .iconpicker-head
     padding-left: 35px;
     position: relative;
     z-index: 4;
+}
+
+.iconpicker-category-button {
+    display: inline-block;
+    border: 1px solid #dee2e6;
+    padding: 0.375rem 0.75rem;
+    border-radius: 50rem;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: #606972;
+    background-color: #fff;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+    min-width: auto;
+    text-align: center;
+    margin-right: 0.4rem;
+    margin-bottom: 0.25rem;
+    outline: none;
+    box-shadow: none;
+}
+
+.iconpicker-category-button:hover {
+    background-color: #f8f9fa;
+    color: #3a76ff;
+    border-color: #dddddd;
+}
+
+.iconpicker-category-button.active {
+    color: #3a76ff;
+    background-color: #f1f7ff;
+    border-color: #d7e3ff;
+    font-weight: 500;
+    box-shadow: none;
+}
+
+body.dark-mode .iconpicker-category-button {
+    background-color: #212529;
+    color: #adb5bd;
+    border: 1px solid #495057;
+    box-shadow: none;
+}
+
+body.dark-mode .iconpicker-category-button:hover {
+    background-color: #2c3034;
+    color: #6ea8fe;
+}
+
+body.dark-mode .iconpicker-category-button.active {
+    background-color: #212529;
+    color: #6ea8fe;
+    border-color: #3b5380;
+    box-shadow: none;
+}
+
+.iconpicker-category-button i {
+    display: none;
 } 

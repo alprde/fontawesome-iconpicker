@@ -37,20 +37,23 @@
                     '</div>',
             footer: '<div class="iconpicker-footer p-2"></div>',
             iconItem: '<div class="iconpicker-icon" data-icon="{icon}" title="{icon}"><i class="{icon}"></i></div>',
-            iconCategory: '<div class="iconpicker-category" data-category="{category}">{title}</div>'
+            iconCategory: '<div class="iconpicker-category" data-category="{category}"><span>{title}</span></div>'
         },
         categories: {
             solid: {
                 title: 'Solid',
-                prefix: 'fas'
+                prefix: 'fas',
+                icon: 'fas fa-pen'
             },
             regular: {
                 title: 'Regular',
-                prefix: 'far'
+                prefix: 'far',
+                icon: 'far fa-circle'
             },
             brands: {
                 title: 'Markalar',
-                prefix: 'fab'
+                prefix: 'fab',
+                icon: 'fab fa-apple'
             }
         }
     };
@@ -1058,7 +1061,8 @@
             $.each(this.settings.categories, function(catId, category) {
                 var categoryHtml = self.settings.templates.iconCategory
                     .replace('{category}', catId)
-                    .replace('{title}', category.title);
+                    .replace('{title}', category.title)
+                    .replace('{categoryIcon}', category.icon);
                 
                 var categoryElem = $(categoryHtml);
                 categoryContainer.append(categoryElem);
@@ -1755,7 +1759,8 @@
                 // Kategori HTML'ini oluştur
                 var categoryHtml = self.settings.templates.iconCategory
                     .replace('{category}', catId)
-                    .replace('{title}', category.title);
+                    .replace('{title}', category.title)
+                    .replace('{categoryIcon}', category.icon);
                 
                 var categoryElem = $(categoryHtml);
                 categoryContainer.append(categoryElem);
@@ -1879,6 +1884,127 @@
             });
             
             return categoriesContainer;
+        },
+        _createCategories: function() {
+            var self = this;
+            var $dropdown = $('#' + this.uniqueId);
+            var $container = $dropdown.find('.iconpicker-content');
+            
+            // Kategori başlığı ekle
+            var $categoriesHeader = $('<div class="iconpicker-categories-header">Kategoriler</div>');
+            $container.append($categoriesHeader);
+            
+            // Kategori container
+            var $categoriesContainer = $('<div class="iconpicker-categories"></div>');
+            $container.append($categoriesContainer);
+            
+            // Tüm kategoriler
+            if (this.iconData && Object.keys(this.iconData).length > 1) {
+                var allCategoryHtml = self.settings.templates.iconCategory
+                    .replace('{category}', 'all')
+                    .replace('{title}', 'Tümü');
+                
+                var allCategoryElem = $(allCategoryHtml);
+                
+                if (this.activeCategory === 'all') {
+                    allCategoryElem.addClass('active');
+                }
+                
+                allCategoryElem.on('click', function() {
+                    self._selectCategory('all');
+                });
+                
+                $categoriesContainer.append(allCategoryElem);
+            }
+            
+            // Diğer kategoriler
+            $.each(this.settings.categories, function(catId, category) {
+                // Kategoride ikon yoksa atla
+                if (!self.iconData[catId] || self.iconData[catId].length === 0) {
+                    return true; // continue
+                }
+                
+                var categoryHtml = self.settings.templates.iconCategory
+                    .replace('{category}', catId)
+                    .replace('{title}', category.title);
+                
+                var categoryElem = $(categoryHtml);
+                
+                if (self.activeCategory === catId) {
+                    categoryElem.addClass('active');
+                }
+                
+                categoryElem.on('click', function() {
+                    self._selectCategory(catId);
+                });
+                
+                $categoriesContainer.append(categoryElem);
+            });
+        },
+        _showIcons: function() {
+            var self = this;
+            var $dropdown = $('#' + this.uniqueId);
+            var $content = $dropdown.find('.iconpicker-content');
+            
+            // İçeriği temizle
+            $content.empty();
+            
+            // Kategori ve ikon yoksa, uyarı göster
+            if (!this.iconData || Object.keys(this.iconData).length === 0) {
+                $content.html('<div class="text-center p-3 text-muted">Icon verisi yüklenemedi</div>');
+                return;
+            }
+            
+            // Kategorileri oluştur
+            this._createCategories();
+            
+            // İkonları göster
+            var $iconContainer = $('<div class="iconpicker-icons"></div>');
+            $content.append($iconContainer);
+            
+            // Hangi ikonları göstereceğiz?
+            var icons = [];
+            
+            if (this.activeCategory === 'all') {
+                // Tüm kategorileri birleştir
+                $.each(this.iconData, function(category, categoryIcons) {
+                    icons = icons.concat(categoryIcons);
+                });
+            } else if (this.iconData[this.activeCategory]) {
+                // Sadece seçili kategoriyi göster
+                icons = this.iconData[this.activeCategory];
+            }
+            
+            // İkonları oluştur
+            $.each(icons, function(index, icon) {
+                var iconHtml = self.settings.templates.iconItem
+                    .replace(/\{icon\}/g, icon);
+                
+                var $icon = $(iconHtml);
+                
+                // Şu anki seçili ikon bu mu?
+                var selectedIcon = self.element.val();
+                if (selectedIcon === icon) {
+                    $icon.addClass('selected');
+                    
+                    // Otomatik scroll
+                    setTimeout(function() {
+                        var iconPosition = $icon.position().top;
+                        var containerHeight = $content.height();
+                        
+                        if (iconPosition > containerHeight / 2) {
+                            $content.scrollTop(iconPosition - containerHeight / 2);
+                        }
+                    }, 50);
+                }
+                
+                // Tıklama
+                $icon.on('click', function() {
+                    self._selectIcon(icon);
+                });
+                
+                $iconContainer.append($icon);
+            });
         }
     };
 
