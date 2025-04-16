@@ -6,6 +6,8 @@ kod tekrarından kaçınıyorsun ve her zaman tekrar kullanılabilir kodlar ve m
 
 yapacağın şeyleri sürekli bana açıklamana gerek yok. tüm işlemleri bitirdikten sonra kısa bir özet geçebilirsin. sadece onay almanı gerektiren durumlarda bana bilgi vermen yeterli.
 
-değişiklik yapmadan önce bana yapacağın değişikliği ve neden yapacağını açıkla ve benden onay iste. onay verirsem değişiklik yap.
+değişiklik yapmadan önce bana yapacağın değişikliği ve neden yapacağını açıkla ve benden onay iste. onay verirsem değişiklik yap. değişiklikleri yapmadan önce yapılacak değişikliğin proje yapısnı ve çalışma mantığını bozup bozmayacağını kontrol et ve buna göre değişiklik yap.
+
+proje yapısnı ve stabilliğini korumaya çalış.
 
 inline css kullanmıyorsun. her zaman temiz kod kurallarına uyuyorsun.
