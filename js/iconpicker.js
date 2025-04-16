@@ -166,6 +166,11 @@
                     this.settings.modalMode = true;
                     this.settings.zIndex = 1056;
                 }
+                
+                // Sayfa yüklendikten sonra preview-icon'u güncelleyelim
+                $(document).ready(function() {
+                    self._updatePreviewIcon();
+                });
             }
             
             // İkon önizleme elementini ayarla (ek güvenlik kontrolleri)
@@ -1280,24 +1285,54 @@
         _updatePreviewIcon: function() {
             var self = this;
             
-            // Sayfa yüklendiğinde önizleme ikonunu güncelle
-            var inputValue = this.element.val();
-            var iconClass = inputValue || this.settings.selectedIcon;
-            
-            // Preview elementi kontrol et
-            if (this.settings.iconPreview) {
-                var $preview = $(this.settings.iconPreview);
+            try {
+                // Sayfa yüklendiğinde önizleme ikonunu güncelle
+                var inputValue = this.element.val();
+                var iconClass = inputValue || this.settings.selectedIcon;
                 
-                if ($preview.length > 0) {
-                    $preview.attr('class', '').addClass(iconClass);
+                // Preview elementi kontrol et
+                if (this.settings.iconPreview) {
+                    var $preview = $(this.settings.iconPreview);
+                    
+                    if ($preview.length > 0) {
+                        $preview.attr('class', '').addClass(iconClass);
+                    } else {
+                        // Preview elementi bulunamadıysa, otomatik oluştur ve parent elementi kontrol et
+                        var previewDiv = this.element.parent().find('.preview-icon');
+                        
+                        if (previewDiv.length === 0) {
+                            previewDiv = $('<div class="preview-icon"></div>');
+                            var iconElement = $('<i></i>').addClass(iconClass);
+                            previewDiv.append(iconElement);
+                            this.element.before(previewDiv);
+                            this.settings.iconPreview = iconElement;
+                        } else {
+                            // Mevcut preview içindeki i elementini bul ve güncelle
+                            var iconElem = previewDiv.find('i');
+                            if (iconElem.length > 0) {
+                                iconElem.attr('class', '').addClass(iconClass);
+                            } else {
+                                // i elementi yoksa ekle
+                                iconElem = $('<i></i>').addClass(iconClass);
+                                previewDiv.append(iconElem);
+                            }
+                            this.settings.iconPreview = iconElem;
+                        }
+                    }
                 } else {
-                    // Preview elementi bulunamadıysa, otomatik oluştur
-                    var previewDiv = $('<div class="preview-icon"></div>');
-                    var iconElement = $('<i></i>').addClass(iconClass);
-                    previewDiv.append(iconElement);
-                    this.element.before(previewDiv);
-                    this.settings.iconPreview = iconElement;
+                    // Preview elementi ayarlanmamış, input'un parent elementinde preview-icon ara
+                    var previewDiv = this.element.parent().find('.preview-icon');
+                    
+                    if (previewDiv.length > 0) {
+                        var iconElem = previewDiv.find('i');
+                        if (iconElem.length > 0) {
+                            iconElem.attr('class', '').addClass(iconClass);
+                            this.settings.iconPreview = iconElem;
+                        }
+                    }
                 }
+            } catch (error) {
+                console.error('Preview ikon güncellenirken hata:', error);
             }
             
             return this;
@@ -2065,6 +2100,34 @@
                     }
                 }
             });
+            
+            // Sayfa tamamen yüklendikten sonra bir kez daha tüm preview'leri güncelle
+            // Bu özellikle sayfa ilk yüklendiğinde preview-icon'ların input değerlerini almasını sağlar
+            setTimeout(function() {
+                $('.iconpicker-basic, .icon-picker, .iconpicker').each(function() {
+                    var $input = $(this);
+                    var $previewContainer = $input.parent().find('.preview-icon');
+                    
+                    if ($previewContainer.length > 0) {
+                        var $previewIcon = $previewContainer.find('i');
+                        if ($previewIcon.length === 0) {
+                            $previewIcon = $('<i></i>');
+                            $previewContainer.append($previewIcon);
+                        }
+                        
+                        // Input'ta değer varsa, ikonu güncelle
+                        if ($input.val()) {
+                            $previewIcon.attr('class', '').addClass($input.val());
+                        }
+                    }
+                    
+                    // Eğer plugin başlatılmışsa, _updatePreviewIcon metodunu çağır
+                    var instance = $input.data('iconpicker');
+                    if (instance && typeof instance._updatePreviewIcon === 'function') {
+                        instance._updatePreviewIcon();
+                    }
+                });
+            }, 300);
         }, 100); // Sayfanın tamamen yüklenmesi için kısa bir gecikme
         
         // Modal gösterildiğinde, içindeki icon-picker inputları otomatik başlat
@@ -2095,5 +2158,44 @@
             });
         });
     });
-
+    
+    // Window onload - tüm sayfa kaynakları yüklendikten sonra çalışır 
+    // Bu daha geç çalışır ama DOM'un tamamen yüklenmesini ve tüm asenkron işlemlerin tamamlanmasını garantiler
+    window.addEventListener('load', function() {
+        // Icon preview'leri direkt güncelle - jQuery olmadan da çalışabilir
+        setTimeout(function() {
+            // Tüm ikonpicker inputlarını tara
+            document.querySelectorAll('.iconpicker-basic, .icon-picker, .iconpicker').forEach(function(inputElem) {
+                var $input = $(inputElem);
+                var iconValue = $input.val();
+                
+                if (iconValue) {
+                    // Input'un parent'ını bul
+                    var parent = $input.parent();
+                    if (parent.length > 0) {
+                        // Preview-icon elementini ara
+                        var previewIcon = parent.find('.preview-icon i');
+                        if (previewIcon.length > 0) {
+                            // İkonu güncelle
+                            previewIcon.attr('class', '').addClass(iconValue);
+                        } else {
+                            // Preview-icon div'ini bul
+                            var previewDiv = parent.find('.preview-icon');
+                            if (previewDiv.length > 0) {
+                                // i elementi yoksa oluştur
+                                var iconElem = $('<i></i>').addClass(iconValue);
+                                previewDiv.append(iconElem);
+                            }
+                        }
+                    }
+                }
+                
+                // Plugin instance kontrolü
+                var iconpickerInstance = $input.data('iconpicker');
+                if (iconpickerInstance && typeof iconpickerInstance._updatePreviewIcon === 'function') {
+                    iconpickerInstance._updatePreviewIcon();
+                }
+            });
+        }, 100);
+    }, false);
 })(jQuery); 
