@@ -158,16 +158,11 @@
                     
                     <h3>HTML Yapısı</h3>
                     <pre><code>&lt;div class="input-group"&gt;
-    &lt;div class="preview-icon"&gt;
-        &lt;i class="fas fa-heart"&gt;&lt;/i&gt;
-    &lt;/div&gt;
     &lt;input type="text" class="form-control iconpicker-basic" name="icon" value="fas fa-heart"&gt;
 &lt;/div&gt;</code></pre>
                     
                     <h3>JavaScript Kodu</h3>
-                    <pre><code>$(document).ready(function() {
-    $('.iconpicker-basic').iconpicker();
-});</code></pre>
+                    <pre><code>$('.iconpicker-basic').iconpicker();</code></pre>
                 </section>
                 
                 <section id="ayarlar" class="mt-5">
@@ -181,7 +176,6 @@
     height: 280,                      // Picker yüksekliği (px)
     hideOnSelect: true,               // Seçimden sonra gizle
     showFooter: true,                 // Alt bilgi göster/gizle
-    iconPreview: '.preview-icon i',   // Önizleme elementi seçicisi
     searchText: 'İkon Ara...',        // Arama kutucuğu metni
     noResultsText: 'Sonuç bulunamadı',// Sonuç bulunamadığında gösterilecek metin
     borderRadius: '.375rem',          // Köşe yuvarlaklığı
@@ -239,16 +233,46 @@
                                 <td>Alt bilgiyi göster/gizle</td>
                             </tr>
                             <tr>
-                                <td><code>iconPreview</code></td>
-                                <td>String/jQuery</td>
-                                <td>null</td>
-                                <td>İkon önizleme elementinin seçicisi</td>
+                                <td><code>searchText</code></td>
+                                <td>String</td>
+                                <td>'İkon Ara...'</td>
+                                <td>Arama kutucuğu metni</td>
+                            </tr>
+                            <tr>
+                                <td><code>noResultsText</code></td>
+                                <td>String</td>
+                                <td>'Sonuç bulunamadı'</td>
+                                <td>Sonuç bulunamadığında gösterilecek metin</td>
+                            </tr>
+                            <tr>
+                                <td><code>borderRadius</code></td>
+                                <td>String</td>
+                                <td>'.375rem'</td>
+                                <td>Köşe yuvarlaklığı</td>
+                            </tr>
+                            <tr>
+                                <td><code>backdropOpacity</code></td>
+                                <td>Number</td>
+                                <td>0.7</td>
+                                <td>Arkaplan opaklığı</td>
+                            </tr>
+                            <tr>
+                                <td><code>placement</code></td>
+                                <td>String</td>
+                                <td>'bottom'</td>
+                                <td>Yerleşim (top/bottom)</td>
                             </tr>
                             <tr>
                                 <td><code>modalMode</code></td>
                                 <td>Boolean</td>
                                 <td>false</td>
                                 <td>Modal içinde kullanım için optimizasyon</td>
+                            </tr>
+                            <tr>
+                                <td><code>zIndex</code></td>
+                                <td>Number</td>
+                                <td>1040</td>
+                                <td>z-index değeri</td>
                             </tr>
                             <tr>
                                 <td><code>inlineMode</code></td>
@@ -270,9 +294,6 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <div class="preview-icon">
-                                        <i class="fas fa-heart"></i>
-                                    </div>
                                     <input type="text" class="form-control iconpicker-basic" name="icon" value="fas fa-heart">
                                 </div>
                                 
@@ -287,16 +308,11 @@
                         
                         <h4 class="mt-4">HTML Kodu</h4>
                         <pre><code>&lt;div class="input-group"&gt;
-    &lt;div class="preview-icon"&gt;
-        &lt;i class="fas fa-heart"&gt;&lt;/i&gt;
-    &lt;/div&gt;
     &lt;input type="text" class="form-control iconpicker-basic" name="icon" value="fas fa-heart"&gt;
 &lt;/div&gt;</code></pre>
                         
                         <h4>JavaScript</h4>
-                        <pre><code>$('.iconpicker-basic').iconpicker({
-    iconPreview: '.preview-icon i'
-});</code></pre>
+                        <pre><code>$('.iconpicker-basic').iconpicker();</code></pre>
                     </section>
                     
                     <section id="ornek-modal" class="demo-section">
@@ -317,9 +333,6 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="input-group">
-                                            <div class="preview-icon-modal">
-                                                <i class="fas fa-star"></i>
-                                            </div>
                                             <input type="text" class="form-control iconpicker-modal" name="icon" value="fas fa-star">
                                         </div>
                                     </div>
@@ -347,9 +360,6 @@
             &lt;/div&gt;
             &lt;div class="modal-body"&gt;
                 &lt;div class="input-group"&gt;
-                    &lt;div class="preview-icon"&gt;
-                        &lt;i class="fas fa-star"&gt;&lt;/i&gt;
-                    &lt;/div&gt;
                     &lt;input type="text" class="form-control iconpicker-modal" name="icon" value="fas fa-star"&gt;
                 &lt;/div&gt;
             &lt;/div&gt;
@@ -363,7 +373,6 @@
                         
                         <h4>JavaScript</h4>
                         <pre><code>$('.iconpicker-modal').iconpicker({
-    iconPreview: '.preview-icon i',
     modalMode: true
 });</code></pre>
                     </section>
@@ -375,9 +384,6 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="input-group mb-2">
-                                    <div class="preview-icon-inline">
-                                        <i class="fas fa-coffee"></i>
-                                    </div>
                                     <input type="text" class="form-control iconpicker-inline" name="icon" value="fas fa-coffee">
                                 </div>
                             </div>
@@ -385,15 +391,11 @@
                         
                         <h4 class="mt-4">HTML Kodu</h4>
                         <pre><code>&lt;div class="input-group"&gt;
-    &lt;div class="preview-icon"&gt;
-        &lt;i class="fas fa-coffee"&gt;&lt;/i&gt;
-    &lt;/div&gt;
     &lt;input type="text" class="form-control iconpicker-inline" name="icon" value="fas fa-coffee"&gt;
 &lt;/div&gt;</code></pre>
                         
                         <h4>JavaScript</h4>
                         <pre><code>$('.iconpicker-inline').iconpicker({
-    iconPreview: '.preview-icon i',
     inlineMode: true
 });</code></pre>
                     </section>
@@ -405,9 +407,6 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <div class="preview-icon-callback">
-                                        <i class="fas fa-cog"></i>
-                                    </div>
                                     <input type="text" class="form-control iconpicker-callback" name="icon" value="fas fa-cog">
                                 </div>
                                 <div class="alert alert-info mt-3" id="callbackResult">İkon seçimi bekleniyor...</div>
@@ -416,17 +415,13 @@
                         
                         <h4 class="mt-4">HTML Kodu</h4>
                         <pre><code>&lt;div class="input-group"&gt;
-    &lt;div class="preview-icon"&gt;
-        &lt;i class="fas fa-cog"&gt;&lt;/i&gt;
-    &lt;/div&gt;
     &lt;input type="text" class="form-control iconpicker-callback" name="icon" value="fas fa-cog"&gt;
 &lt;/div&gt;
 &lt;div class="alert alert-info mt-3" id="callbackResult"&gt;İkon seçimi bekleniyor...&lt;/div&gt;</code></pre>
                         
                         <h4>JavaScript</h4>
-                        <pre><code>$('.iconpicker-callback').iconpicker({
-    iconPreview: '.preview-icon i'
-}).on('change', function(e) {
+                        <pre><code>$('.iconpicker-callback').iconpicker()
+.on('change', function(e) {
     $('#callbackResult').html(
         '&lt;strong&gt;İkon değiştirildi:&lt;/strong&gt; ' + 
         '&lt;i class="' + e.target.value + ' me-2"&gt;&lt;/i&gt;' + 
@@ -572,20 +567,17 @@ function setIconValue(selector, iconClass) {
             
             // Modal içinde iconpicker
             $('.iconpicker-modal').iconpicker({
-                iconPreview: '.preview-icon-modal i',
                 modalMode: true
             });
             
             // Inline mode
             $('.iconpicker-inline').iconpicker({
-                iconPreview: '.preview-icon-inline i',
                 inlineMode: true
             });
             
             // Callback örneği
-            $('.iconpicker-callback').iconpicker({
-                iconPreview: '.preview-icon-callback i'
-            }).on('change', function(e) {
+            $('.iconpicker-callback').iconpicker()
+            .on('change', function(e) {
                 $('#callbackResult').html(
                     '<strong>İkon değiştirildi:</strong> ' + 
                     '<i class="' + e.target.value + ' me-2"></i>' + 
