@@ -171,4 +171,4 @@ MIT Lisansı altında yayınlanmıştır.
 
 ## İletişim
 
-GitHub: [github.com/yourusername/iconpicker](https://github.com/yourusername/iconpicker) 
+GitHub: [github.com/alprde/fontawesome-iconpicker](https://github.com/alprde/fontawesome-iconpicker) 
